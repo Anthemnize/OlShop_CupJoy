@@ -4,12 +4,12 @@ session_start();
 
 // Handle delete action
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
-    $product_id = $_GET['id'];
+    $cart_id = $_GET['id']; // Get cart.id instead of product_id
     $user_id = $_SESSION['user_id'];
 
-    $sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ?";
+    $sql = "DELETE FROM cart WHERE id = ? AND user_id = ?"; // Use cart.id for deletion
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$user_id, $product_id]);
+    $stmt->execute([$cart_id, $user_id]);
 
     // Check if deletion was successful
     $deleted = $stmt->rowCount() > 0;
@@ -53,6 +53,7 @@ if (isset($_SESSION['user_id'])) {
     $cart_items = []; // If user_id is not set in session, initialize an empty array
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
