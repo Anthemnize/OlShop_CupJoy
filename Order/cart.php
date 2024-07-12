@@ -16,14 +16,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 
     if ($deleted) {
         echo "Product deleted from cart.";
-
-        // Refresh cart items after deletion
-        $sql = "SELECT cart.id, products.name, products.price, cart.quantity FROM cart 
-                JOIN products ON cart.product_id = products.id 
-                WHERE cart.user_id = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$user_id]);
-        $cart_items = $stmt->fetchAll();
     } else {
         echo "Failed to delete product from cart.";
     }
@@ -41,6 +33,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'add' && isset($_GET['id'])) {
     echo "Product added to cart.";
 }
 
+// Handle update action
+if (isset($_POST['action']) && $_POST['action'] == 'update' && isset($_POST['id']) && isset($_POST['quantity'])) {
+    $cart_id = $_POST['id'];
+    $quantity = $_POST['quantity'];
+    $user_id = $_SESSION['user_id'];
+
+    $sql = "UPDATE cart SET quantity = ? WHERE id = ? AND user_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$quantity, $cart_id, $user_id]);
+
+    echo "Cart updated.";
+}
+
 // Retrieve cart items for the current user
 if (isset($_SESSION['user_id'])) {
     $sql = "SELECT cart.id, products.name, products.price, cart.quantity FROM cart 
@@ -54,7 +59,6 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,7 +71,7 @@ if (isset($_SESSION['user_id'])) {
         body {
             background-image: url("cart.jpg");
             height: 100%;
-            background-position: justify;
+            background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
         }
@@ -92,29 +96,34 @@ if (isset($_SESSION['user_id'])) {
             margin-top: 20px;
         }
 
-        /* Optional: Add more styling for buttons */
         .btn-primary {
             background-color: #007bff;
-            /* Blue primary color */
             border-color: #007bff;
         }
 
         .btn-primary:hover {
             background-color: #0056b3;
-            /* Darker blue on hover */
             border-color: #0056b3;
         }
 
         .btn-secondary {
             background-color: #6c757d;
-            /* Gray secondary color */
             border-color: #6c757d;
         }
 
         .btn-secondary:hover {
             background-color: #545b62;
-            /* Darker gray on hover */
             border-color: #545b62;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .btn-increase,
+        .btn-decrease {
+            padding: 0.375rem 0.75rem;
         }
     </style>
 </head>
@@ -137,7 +146,18 @@ if (isset($_SESSION['user_id'])) {
                     <tr>
                         <td><?php echo $item['name']; ?></td>
                         <td><?php echo number_format($item['price'], 0, ',', '.'); ?> RP</td>
-                        <td><?php echo $item['quantity']; ?></td>
+                        <td>
+                            <form action="cart.php" method="POST" class="d-inline">
+                                <input type="hidden" name="action" value="update">
+                                <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
+                                <button type="submit" name="quantity" value="<?php echo $item['quantity'] - 1; ?>"
+                                    class="btn btn-decrease btn-sm">-</button>
+                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>"
+                                    class="quantity-input" min="1">
+                                <button type="submit" name="quantity" value="<?php echo $item['quantity'] + 1; ?>"
+                                    class="btn btn-increase btn-sm">+</button>
+                            </form>
+                        </td>
                         <td><?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?> RP</td>
                         <td>
                             <a href="cart.php?action=delete&id=<?php echo $item['id']; ?>"

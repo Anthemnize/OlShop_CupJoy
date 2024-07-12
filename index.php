@@ -26,6 +26,7 @@ $products = $stmt->fetchAll();
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-image: url("bg.jpg");
             height: 100%;
             background-position: center;
@@ -39,21 +40,27 @@ $products = $stmt->fetchAll();
             background-image: url("bg.jpg");
             filter: blur(8px);
             -webkit-filter: blur(8px);
+            position: center;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
 
         .navbar {
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .container {
             padding-top: 20px;
+            z-index: 1;
+            position: relative;
         }
 
         .card {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9);
             /* Card background color */
             color: #333333;
             /* Card text color */
@@ -68,6 +75,7 @@ $products = $stmt->fetchAll();
         .card-title {
             color: #333333;
             /* Card title color */
+            font-weight: bold;
         }
 
         .card-text {
@@ -102,13 +110,27 @@ $products = $stmt->fetchAll();
             border-color: #545b62;
             /* Secondary button hover border color */
         }
+
+        .navbar-brand,
+        .nav-link {
+            color: #333 !important;
+        }
+
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+
+        .container h1 {
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 
 <body>
     <div class="bg-image"></div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="#">Cafe Shop</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,8 +159,9 @@ $products = $stmt->fetchAll();
             </ul>
         </div>
     </nav>
+
     <div class="container mt-5">
-        <h1 class="mb-4">Products</h1>
+        <h1 class="mb-4 text-center">Our Products</h1>
         <div class="row">
             <?php foreach ($products as $product): ?>
                 <div class="col-md-4 mb-4">
@@ -156,10 +179,14 @@ $products = $stmt->fetchAll();
                 </div>
             <?php endforeach; ?>
         </div>
-        <div class="mt-4">
+        <div class="mt-4 text-center">
             <a href="Order/cart.php" class="btn btn-secondary">View Cart</a>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

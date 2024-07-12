@@ -13,6 +13,7 @@ $cart_items = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,6 +33,7 @@ $cart_items = $stmt->fetchAll();
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Checkout</h1>
@@ -47,23 +49,24 @@ $cart_items = $stmt->fetchAll();
             <tbody>
                 <?php foreach ($cart_items as $item): ?>
                     <tr>
-                        <td><?php echo $item['name']; ?></td>
-                        <td><?php echo $item['price']; ?> USD</td>
-                        <td><?php echo $item['quantity']; ?></td>
-                        <td><?php echo $item['price'] * $item['quantity']; ?> USD</td>
+                        <td><?php echo htmlspecialchars($item['name']); ?></td>
+                        <td><?php echo number_format($item['price'], 2, ',', '.'); ?> USD</td>
+                        <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                        <td><?php echo number_format($item['price'] * $item['quantity'], 2, ',', '.'); ?> USD</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <h3>Total: <?php 
-            $total = 0;
-            foreach ($cart_items as $item) {
-                $total += $item['price'] * $item['quantity'];
-            }
-            echo $total; ?> USD
+        <h3>Total: <?php
+        $total = 0;
+        foreach ($cart_items as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+        echo number_format($total, 2, ',', '.'); ?> USD
         </h3>
         <a href="confirm_checkout.php" class="btn btn-primary btn-confirm">Confirm Purchase</a>
         <a href="cart.php" class="btn btn-secondary">Back to Cart</a>
     </div>
 </body>
+
 </html>
