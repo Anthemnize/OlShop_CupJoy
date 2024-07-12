@@ -4,11 +4,11 @@ session_start();
 // Include your configuration file or any necessary dependencies here
 require 'config.php';
 
+// Redirect to login if user is not authenticated
 if (!isset($_SESSION['user_id'])) {
     header("Location: Auth/login.php");
     exit;
 }
-
 
 // Fetch products from the database
 $sql = "SELECT * FROM products";
@@ -120,11 +120,11 @@ $products = $stmt->fetchAll();
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cart.php">Cart</a>
+                    <a class="nav-link" href="Order/cart.php">Cart</a>
                 </li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?logout=true">Logout</a>
+                        <a class="nav-link" href="Auth/logout.php">Logout</a>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
